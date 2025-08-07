@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestão da Loja</title>
+  <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', 'Poppins', sans-serif;
+    background: linear-gradient(to right, #f7f9fc, #eaf0f8);
+    color: #333;
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1f3a5f, #305a91);
+    color: #fff;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  header .description {
+    font-size: 1.1rem;
+    color: #d0d8f0;
+    margin-top: 0.6rem;
+  }
+
+  main.login-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+
+  .actor-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.8rem;
+    width: 230px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+
+  .actor-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .actor-card h2 {
+    color: #1f3a5f;
+    margin-bottom: 0.4rem;
+    font-size: 1.2rem;
+  }
+
+  .actor-card p {
+    font-size: 0.95rem;
+    color: #666;
+  }
+
+  .panel {
+    display: none;
+    background: #ffffff;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 14px;
+    max-width: 960px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .panel.visible {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel h2, .panel h3 {
+    text-align: center;
+    color: #1f3a5f;
+    margin-bottom: 1rem;
+  }
+
+  .module {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .module button,
+  .form-simulado button {
+    background: linear-gradient(to right, #1f3a5f, #305a91);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .module button:hover,
+  .form-simulado button:hover {
+    background: #3d6fbb;
+  }
+
+  .form-simulado {
+    background: #f9fafc;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .form-simulado label {
+    display: block;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    color: #444;
+  }
+
+  .form-simulado input,
+  .form-simulado select,
+  .form-simulado textarea {
+    width: 100%;
+    padding: 0.65rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    background: #fff;
+  }
+
+  .form-simulado textarea {
+    resize: vertical;
+  }
+
+  .resultado-simulado {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    background-color: #eafaf1;
+    color: #2e7d32;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .historico-box {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  footer {
+    background: linear-gradient(135deg, #1f3a5f, #305a91);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 3rem;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #d3d3d3;
+    margin: 2rem 0;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .actor-card {
+      width: 90%;
+    }
+
+    .panel {
+      margin: 1rem;
+      padding: 1rem;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>Sistema de Gestão da Loja de Materiais</h1>
+    <p class="description">Simulação interativa das funções dos usuários.</p>
+  </header>
+
+  <main class="login-container">
+    <div class="actor-card" data-target="panel-gerente">
+      <h2>Gerente</h2>
+      <p>Gerar relatórios e definir metas simuladas.</p>
+    </div>
+    <div class="actor-card" data-target="panel-vendedor">
+      <h2>Vendedor</h2>
+      <p>Registrar venda simulada.</p>
+    </div>
+    <div class="actor-card" data-target="panel-cliente">
+      <h2>Cliente</h2>
+      <p>Acompanhar status de pedido e avaliar entrega.</p>
+    </div>
+    <div class="actor-card" data-target="panel-estoque">
+      <h2>Estoque</h2>
+      <p>Atualizar quantidade e cadastrar produto.</p>
+    </div>
+    <div class="actor-card" data-target="panel-transportadora">
+      <h2>Transportadora</h2>
+      <p>Confirmar coleta e atualizar status de entrega.</p>
+    </div>
+  </main>
+
+  <div class="panels-container">
+    <div id="panel-gerente" class="panel">
+  <h2>Painel do Gerente</h2>
+
+  <!-- Definição e histórico de metas -->
+  <div class="form-simulado">
+    <label for="meta">Nova Meta de Vendas (R$):</label>
+    <input type="number" id="meta" placeholder="Ex: 10000">
+    <button onclick="confirmarMeta()">Definir Meta</button>
+    <button onclick="verHistoricoMetas()">Ver Histórico de Metas</button>
+    <div id="resposta-meta" class="resultado-simulado"></div>
+    <div id="historico-metas" class="resultado-simulado"></div>
+  </div>
+
+  <hr>
+  <h3>ERP Integrado</h3>
+  <div class="module">
+    <button onclick="simularERP('vendas')">Relatório de Vendas</button>
+    <button onclick="simularERP('estoque')">Relatório de Estoque</button>
+    <button onclick="simularERP('financeiro')">Relatório Financeiro</button>
+    <button onclick="exportarRelatorios()">📤 Exportar Relatórios (PDF)</button>
+  </div>
+  <div id="resposta-erp" class="resultado-simulado"></div>
+
+  <hr>
+  <h3>Campanhas de Marketing</h3>
+  <div class="form-simulado">
+    <label for="plataforma">Plataforma:</label>
+    <select id="plataforma">
+      <option>Facebook</option>
+      <option>Instagram</option>
+      <option>Google Ads</option>
+    </select>
+    <label for="segmento">Segmento de Público:</label>
+    <input type="text" id="segmento" placeholder="Ex: Jovens da região norte">
+    <label for="orcamento">Orçamento (R$):</label>
+    <input type="number" id="orcamento" placeholder="Ex: 500">
+    <button onclick="criarCampanha()">Criar Campanha</button>
+    <div id="resposta-campanha" class="resultado-simulado"></div>
+  </div>
+
+  <hr>
+  <h3>CRM, Ticket Médio e Churn</h3>
+  <div class="module">
+    <button onclick="analisarCRM()">Análise CRM</button>
+    <button onclick="analisarTicket()">Ticket Médio</button>
+    <button onclick="analisarChurn()">Taxa de Churn</button>
+  </div>
+  <div id="resposta-crm" class="resultado-simulado"></div>
+  <div id="resposta-ticket" class="resultado-simulado"></div>
+  <div id="resposta-churn" class="resultado-simulado"></div>
+
+  <hr>
+  <h3>Treinamento da Equipe</h3>
+  <div class="form-simulado">
+    <label for="progresso">Progresso da Equipe (%):</label>
+    <input type="range" id="progresso" min="0" max="100" value="70" oninput="atualizarStatusTreinamento(this.value)">
+    <p><strong>Status:</strong> <span id="status-treinamento">Em Andamento</span></p>
+    <p>✔️ Vendas Consultivas</p>
+    <p>✔️ Metas Semanais</p>
+    <p>✔️ Atendimento Personalizado</p>
+  </div>
+</div>
+
+
+    <div id="panel-vendedor" class="panel">
+  <h2>Painel do Vendedor</h2>
+
+  <!-- Seção: Registro Unificado de Venda -->
+  <div class="form-simulado">
+    <h3>Registrar Venda</h3>
+
+    <label for="cliente">Nome do Cliente:</label>
+    <input type="text" id="cliente" placeholder="Ex: João Silva">
+
+    <label for="produto">Produto:</label>
+    <select id="produto">
+      <option value="Cimento CP-II">Cimento CP-II</option>
+      <option value="Tijolo Baiano">Tijolo Baiano</option>
+      <option value="Areia Média">Areia Média</option>
+    </select>
+
+    <label for="quantidade">Quantidade:</label>
+    <input type="number" id="quantidade" placeholder="Ex: 10">
+
+    <label for="valor">Valor Total (R$):</label>
+    <input type="number" id="valor" placeholder="Ex: 90">
+
+    <label for="pagamento">Forma de Pagamento:</label>
+    <select id="pagamento">
+      <option value="À vista">À vista</option>
+      <option value="Cartão de Crédito">Cartão de Crédito</option>
+      <option value="Boleto">Boleto</option>
+    </select>
+
+    <button onclick="registrarVendaUnificada()">Registrar Venda</button>
+    <div id="mensagem-venda" class="resultado-simulado"></div>
+  </div>
+
+  <hr>
+
+  <!-- Histórico Unificado -->
+  <div class="form-simulado">
+    <h3>Histórico de Vendas</h3>
+    <div class="historico-box" id="historico-vendas"></div>
+  </div>
+</div>
+
+<div id="panel-estoque" class="panel">
+      
+<h3>Atualizar Estoque</h3>
+<div class="form-simulado">
+  <label>Produto:</label>
+  <input type="text" id="produto-estoque" placeholder="Ex: Piso Cerâmico">
+  <label>Nova Quantidade:</label>
+  <input type="number" id="quantidade-estoque">
+  <button onclick="atualizarEstoque()">Atualizar</button>
+  <div id="resposta-estoque" class="resultado-simulado"></div>
+</div>
+
+<h3>Histórico de Movimentações</h3>
+<div class="historico-box" id="historico-estoque"></div>
+
+      </div>
+    </div>
+    <!-- PAINEL DO CLIENTE -->
+<div id="panel-cliente" class="panel">
+  <h2>Portal do Cliente</h2>
+  <div class="form-simulado">
+    <label for="pedido">Número do Pedido:</label>
+    <input type="text" id="pedido" placeholder="Ex: #1234">
+    <button onclick="acompanharPedido()">Acompanhar Pedido</button>
+    <div id="resposta-pedido" class="resultado-simulado"></div>
+
+    <label for="avaliacao">Avaliação da Entrega:</label>
+    <textarea id="avaliacao" rows="3" placeholder="Escreva sua opinião..."></textarea>
+    <button onclick="avaliarEntrega()">Enviar Avaliação</button>
+    <div id="resposta-avaliacao" class="resultado-simulado"></div>
+  </div>
+
+  <hr>
+  <h3>Programa de Fidelidade</h3>
+  <div class="form-simulado">
+    <p><strong>Pontos acumulados:</strong> 120</p>
+    <button onclick="resgatarPremio()">Resgatar Prêmio</button>
+    <div id="resposta-fidelidade" class="resultado-simulado"></div>
+
+    
+  </div>
+</div>
+
+<!-- PAINEL DA TRANSPORTADORA -->
+<div id="panel-transportadora" class="panel">
+  <h2>Portal da Transportadora</h2>
+  <div class="form-simulado">
+    <label for="codEntrega">Código da Entrega:</label>
+    <input type="text" id="codEntrega" placeholder="Ex: #1234">
+    <button onclick="consultarEntrega()">Consultar Status</button>
+    <div id="resposta-coleta" class="resultado-simulado"></div>
+
+    <hr>
+    <h3>Registrar Entrega</h3>
+    <label>Pedido/Cliente (Código do Pedido):</label>
+    <input type="text" id="entrega-destino" placeholder="Ex: #1234">
+    <label>Status:</label>
+    <select id="status-entrega">
+      <option>Entregue</option>
+      <option>Em rota</option>
+      <option>Problema na entrega</option>
+    </select>
+    <button onclick="registrarEntrega()">Registrar Entrega</button>
+    <div id="resposta-entrega" class="resultado-simulado"></div>
+  </div>
+
+  <h3>Histórico de Entregas</h3>
+  <div class="historico-box" id="historico-entregas"></div>
+</div>
+
+
+  <footer>
+    &copy; 2025 Constrular - Sistema de Gestão Integrada
+  </footer>
+
+  <script>
+    const historico = [];
+    const historicoFidelidade = [];
+    const historicoEstoque = [];
+    const historicoEntregas = [];
+    const historicoMetas = [];
+    const statusEntregas = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.actor-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('visible'));
+          const panel = document.getElementById(card.dataset.target);
+          if (panel) {
+            panel.classList.add('visible');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    });
+
+    function atualizarHistorico(elementId, lista) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = lista.length ? lista.map((item, i) => `<p><strong>${i + 1}.</strong> ${item}</p>`).join('') : '<p>Nenhum registro.</p>';
+    }
+
+    function registrarVendaUnificada() {
+      const cliente = document.getElementById('cliente').value.trim();
+      const produto = document.getElementById('produto').value;
+      const quantidade = document.getElementById('quantidade').value.trim();
+      const valor = document.getElementById('valor').value.trim();
+      const pagamento = document.getElementById('pagamento').value;
+      const mensagemDiv = document.getElementById('mensagem-venda');
+
+      if (!cliente || !produto || !quantidade || !valor || !pagamento) {
+        mensagemDiv.innerHTML = "<span style='color: red;'>Preencha todos os campos para registrar a venda.</span>";
+        return;
+      }
+
+      historico.push({ cliente, produto, quantidade, valor, pagamento, data: new Date().toLocaleString() });
+      mensagemDiv.innerHTML = "<span style='color: green;'>Venda registrada com sucesso!</span>";
+      atualizarHistoricoVendas();
+
+      ['cliente', 'quantidade', 'valor'].forEach(id => document.getElementById(id).value = "");
+    }
+
+    function atualizarHistoricoVendas() {
+      const div = document.getElementById('historico-vendas');
+      div.innerHTML = historico.length ? historico.map((v, i) => `
+        <div class="historico-item">
+          <strong>${i + 1}. ${v.cliente}</strong><br>
+          Produto: ${v.produto} | Qtd: ${v.quantidade} | R$ ${v.valor}<br>
+          Pagamento: ${v.pagamento} | Data: ${v.data}
+          <hr>
+        </div>`).join('') : '<p>Nenhuma venda registrada ainda.</p>';
+    }
+
+    function confirmarMeta() {
+      const meta = parseFloat(document.getElementById('meta').value);
+      if (!isNaN(meta)) {
+        historicoMetas.push({ valor: meta, data: new Date().toLocaleDateString() });
+        document.getElementById('resposta-meta').innerText = `Meta de R$${meta} definida com sucesso.`;
+      }
+    }
+
+    function verHistoricoMetas() {
+      const html = historicoMetas.length ? '<strong>Histórico de Metas:</strong><ul>' +
+        historicoMetas.map(item => `<li>R$${item.valor} - ${item.data}</li>`).join('') + '</ul>' : '<p>Sem metas definidas.</p>';
+      document.getElementById('historico-metas').innerHTML = html;
+    }
+
+    function simularERP(tipo) {
+      const respostaDiv = document.getElementById('resposta-erp');
+
+  if (tipo === 'vendas') {
+    if (historico.length === 0) {
+      respostaDiv.innerText = "Nenhuma venda registrada até o momento.";
+      return;
+    }
+
+    let totalVendas = 0;
+    let totalPedidos = historico.length;
+
+    historico.forEach(venda => {
+      totalVendas += parseFloat(venda.valor);
+    });
+
+    respostaDiv.innerText = `Relatório de Vendas:\nTotal: R$ ${totalVendas.toFixed(2)} em ${totalPedidos} pedidos.`;
+  }
+
+  else if (tipo === 'estoque') {
+    if (historicoEstoque.length === 0) {
+      respostaDiv.innerText = "Nenhuma movimentação de estoque registrada.";
+      return;
+    }
+
+    // Criar mapa de produtos e suas quantidades
+    let estoqueAtual = {};
+
+    historicoEstoque.forEach(item => {
+      const partes = item.match(/Produto: (.*), novo estoque: (\d+)/);
+      if (partes && partes.length === 3) {
+        const nome = partes[1];
+        const qtd = parseInt(partes[2]);
+        estoqueAtual[nome] = qtd;
+      }
+    });
+
+    let lista = Object.entries(estoqueAtual)
+      .map(([produto, qtd]) => `• ${produto}: ${qtd} unidades`)
+      .join('\n');
+
+    respostaDiv.innerText = `Relatório de Estoque:\n${lista}`;
+  }
+
+  else if (tipo === 'financeiro') {
+    if (historico.length === 0) {
+      respostaDiv.innerText = "Sem dados financeiros no momento.";
+      return;
+    }
+
+    let totalVendas = 0;
+    historico.forEach(venda => totalVendas += parseFloat(venda.valor));
+    let ticketMedio = totalVendas / historico.length;
+
+    respostaDiv.innerText = 
+      `Relatório Financeiro:\n` +
+      `• Lucro Simulado: R$ ${totalVendas.toFixed(2)}\n` +
+      `• Ticket Médio: R$ ${ticketMedio.toFixed(2)}\n` +
+      `• Número de Vendas: ${historico.length}`;
+  }
+
+  else {
+    respostaDiv.innerText = "Módulo não encontrado.";
+  }
+    }
+
+    function criarCampanha() {
+      const plataforma = document.getElementById('plataforma').value;
+      const segmento = document.getElementById('segmento').value;
+      const orcamento = parseFloat(document.getElementById('orcamento').value);
+      if (plataforma && segmento && !isNaN(orcamento)) {
+        const retornoEstimado = (orcamento * 3.5).toFixed(2);
+        document.getElementById('resposta-campanha').innerText = `Campanha no ${plataforma} para "${segmento}" criada. Retorno estimado: R$${retornoEstimado}`;
+      } else {
+        document.getElementById('resposta-campanha').innerText = "Preencha todos os campos corretamente.";
+      }
+    }
+
+    function analisarCRM() {
+      document.getElementById('resposta-crm').innerText = "Clientes ativos: 230 | Fidelização: 68%";
+    }
+
+    function analisarTicket() {
+      document.getElementById('resposta-ticket').innerText = "Ticket médio atual: R$ 185,23";
+    }
+
+    function analisarChurn() {
+      document.getElementById('resposta-churn').innerText = "Churn atual: 12,4% | Meta: < 10%";
+    }
+
+    function atualizarStatusTreinamento(valor) {
+      document.getElementById('status-treinamento').innerText = valor >= 100 ? "Treinamento Concluído" : "Em Andamento";
+    }
+
+    function registrarEntrega() {
+      const codigo = document.getElementById('entrega-destino').value.trim();
+      const status = document.getElementById('status-entrega').value;
+      const resposta = document.getElementById('resposta-entrega');
+
+      if (!codigo) {
+        resposta.innerHTML = "<span style='color: red;'>Digite o código do pedido.</span>";
+        return;
+      }
+
+      statusEntregas[codigo] = status;
+      historicoEntregas.push({ codigo, status, data: new Date().toLocaleString() });
+      resposta.innerHTML = `<span style='color: green;'>Status do pedido ${codigo} atualizado para \"${status}\".</span>`;
+      atualizarHistoricoEntregas();
+      document.getElementById('entrega-destino').value = "";
+    }
+
+    function atualizarHistoricoEntregas() {
+      const div = document.getElementById('historico-entregas');
+      div.innerHTML = historicoEntregas.length ? historicoEntregas.slice().reverse().map((entrega, i) => `
+        <div class="historico-item">
+          <strong>${i + 1}. Pedido:</strong> ${entrega.codigo}<br>
+          Status: ${entrega.status}<br>
+          Data: ${entrega.data}
+          <hr>
+        </div>`).join('') : '<p>Nenhuma entrega registrada ainda.</p>';
+    }
+
+    function consultarEntrega() {
+      const codigo = document.getElementById('codEntrega').value.trim();
+      const status = statusEntregas[codigo];
+      document.getElementById('resposta-coleta').innerHTML = codigo ? (status ? `<strong>Status do pedido ${codigo}:</strong> ${status}` : "Nenhum status registrado para este código.") : "<span style='color: red;'>Digite o código da entrega.</span>";
+    }
+
+    function acompanharPedido() {
+      const codigo = document.getElementById('pedido').value.trim();
+      const status = statusEntregas[codigo];
+      document.getElementById('resposta-pedido').innerHTML = codigo ? (status ? `<strong>Status do pedido ${codigo}:</strong> ${status}` : "Pedido não encontrado ou ainda não registrado pela transportadora.") : "<span style='color: red;'>Digite o número do pedido.</span>";
+    }
+
+    function avaliarEntrega() {
+      const texto = document.getElementById('avaliacao').value.trim();
+      const resposta = document.getElementById('resposta-avaliacao');
+      if (texto.length < 5) {
+        resposta.innerHTML = "<span style='color: red;'>Escreva uma avaliação mais completa.</span>";
+        return;
+      }
+      resposta.innerHTML = "Obrigado pela sua avaliação!";
+      document.getElementById('avaliacao').value = "";
+    }
+
+    function atualizarEstoque() {
+      const produto = document.getElementById('produto-estoque').value;
+      const qtd = document.getElementById('quantidade-estoque').value;
+      if (produto && qtd >= 0) {
+        historicoEstoque.push(`Produto: ${produto}, novo estoque: ${qtd} unidades`);
+        document.getElementById('resposta-estoque').innerText = "Atualização feita com sucesso.";
+        atualizarHistorico('historico-estoque', historicoEstoque);
+      } else {
+        document.getElementById('resposta-estoque').innerText = "Preencha todos os campos corretamente.";
+      }
+    }
+
+    function resgatarPremio() {
+      const info = "Resgatado: Kit Ferramenta com 100 pontos.";
+      historicoFidelidade.push(info);
+      document.getElementById('resposta-fidelidade').innerText = "Parabéns! " + info;
+      atualizarHistorico('historico-fidelidade', historicoFidelidade);
+    }
+
+    function exportarRelatorios() {
+      alert("Simulação: Relatórios exportados em PDF para o e-mail corporativo.");
+    }
+  </script>
+</body>
+</html>
